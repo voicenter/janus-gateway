@@ -82,7 +82,7 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, struct url_data *data) {
     return size * nmemb;
 }
 
-char *handle_url(char* url) {
+char *handle_url(char* url, char* method_type, char* data) {
     CURL *curl;
 
     struct url_data data;
@@ -101,6 +101,10 @@ char *handle_url(char* url) {
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        if (method_type == "post") {
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)strlen(body));
+        }
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &data);
         res = curl_easy_perform(curl);
         if(res != CURLE_OK) {
@@ -112,6 +116,18 @@ char *handle_url(char* url) {
 
     }
     return data.data;
+}
+
+/* GET request implementation */
+char *get(char *url)
+{
+    return handle_url(url, "get", NULL);
+};
+
+/* POST request implementation. body should be a query string */
+char *post(char *url, char *body)
+{
+    return handle_url(url, "post", body);
 }
 
 
