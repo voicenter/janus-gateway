@@ -72,8 +72,7 @@ module.exports = function (global, state) {
   function handleSyncManager(id, tr, body) {
     var room = state.getRoom(body.room);
     room.publishers.forEach(function (el) {
-      // state.tasks.push({ id: el, tr, msg: body });
-      global.pushEvent(el, null, JSON.stringify(body), null);
+      state.tasks.push({ id: el, tr, msg: body });
     });
     global.pokeScheduler();
     return 1;

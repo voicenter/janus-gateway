@@ -402,12 +402,11 @@ function resumeScheduler() {
 	// you're free not to use this and just return, but the C Duktape plugin
 	// expects this method to exist so it MUST be present, even if empty
 	console.log("Resuming coroutines");
-	for (var index in tasks) {
-		var task = tasks[index];
-		processAsync(task);
-	}
+	tasks.forEach(function (el) { processAsync(el) });
 	console.log("Coroutines resumed");
-	tasks = [];
+
+	// clear tasks array
+	tasks.splice(0, tasks.length);
 }
 
 /**
