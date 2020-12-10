@@ -18,6 +18,7 @@ Error.prototype.toString = function () {
 	// @ts-ignore
 	return this.name + ": " + this.message + " (at line " + this.lineNumber + ")";
 };
+
 // Let's add a prefix to all console.log lines
 var originalConsoleLog = console.log;
 console.log = function () {
@@ -49,7 +50,6 @@ Duktape.modSearch = function (id) {
 
 // Let's import our ugly SDP parser now
 var sdpUtils = require("./janus-sdp");
-//const JANUSSDP = require("./janus-sdp");
 
 // State and properties
 
@@ -138,12 +138,12 @@ function destroy() {
  * @param {number} id
  */
 function createSession(id) {
-	
+
 	console.log('lifecycle createSession', id)
 	// Keep track of a new session
 	console.log("Created new session:", id);
 	var session = newSession(id);
-	
+
 	// By default, we accept and relay all streams
 	global.configureMedium(id, "audio", "in", true);
 	global.configureMedium(id, "audio", "out", true);
@@ -176,14 +176,14 @@ function destroySession(id) {
 
 	deleteSession(id);
 
-	
+
 	// try {
 	// 	hangupMedia(id);
 	// } catch (e) {
 	// 	console.log("cannot hangupMedia for session (" + id + " )", e);
-		
+
 	// }
-	
+
 	//delete sessions[id];
 	return 0;
 }
@@ -226,7 +226,7 @@ function querySession(id) {
  */
 function handleMessage(id, tr, msg, jsep) {
 	console.log('lifecycle handleMessage',msg, JSON.stringify(msgT))
-	
+
 
 
 	// Handle a message, synchronously or asynchronously, and return
@@ -243,7 +243,7 @@ function handleMessage(id, tr, msg, jsep) {
 	// Decode the message JSON string
 	var msgT = JSON.parse(msg);
 	setSessionType(id,msgT.ptype)
-	console.log("requesttt:" +  msgT.request + " msgT " + JSON.stringify(msgT))
+	console.log("request:" +  msgT.request + " msgT " + JSON.stringify(msgT))
 	// Let's return a synchronous response if there's no jsep, asynchronous otherwise
 	if (msgT.ptype === "manager") {
 		return handleManagerMessage(id, tr, msgT);
@@ -255,7 +255,7 @@ function handleMessage(id, tr, msg, jsep) {
 		if (msgT.request === "join") {
 			if (msgT.ptype === "publisher") {
 				//must have room if we whant to start publish somewhere ...
-			
+
 				if (!msgT.room) msgT.room = 1234;
 				var room = getRoom(msgT.room)
 				if(!room) room = newRoom(msgT.room)
@@ -292,7 +292,7 @@ function handleMessage(id, tr, msg, jsep) {
 			} else if (msgT.ptype === "subscriber") {
 				console.log("subscriber addRecipient", msgT.feed, id);
 				console.log("Join request ......", msgT);
-				var room = getRoom(msgT.room) 
+				var room = getRoom(msgT.room)
 				console.log('requesttt subscriber', room)
 				room.sessions.push(id);
 				setRoom(room);
@@ -325,7 +325,7 @@ function handleMessage(id, tr, msg, jsep) {
 			session.state = msgT.data;
 			setSession(session)
 			var room = getRoom(session.room)
-			
+
 			room.publishers.forEach(function (publisher) {
 				if (publisher !== id) {
 					var publishersArray = [session];
@@ -341,7 +341,7 @@ function handleMessage(id, tr, msg, jsep) {
 			setSubstream(msgT.subId, msgT.substream);
 			global.sendPli(id);
 		}
-		
+
 		return JSON.stringify(response);
 	} else {
 		if (msgT.request === "start") {
@@ -417,9 +417,9 @@ function hangupMedia(id) {
 	var unpublishedEvent = { videoroom: "event", room: 1234, unpublished: id, janusServer: janusServer };
 	global.notifyEvent(id, JSON.stringify(unpublishedEvent));
 	var session = getSession(id);
-	if(!session) return 
+	if(!session) return
 	console.log("WebRTC PeerConnection is down for session:", JSON.stringify(session));
-			// Detach the stream from all publishers	
+			// Detach the stream from all publishers
 			session.publishers.forEach(function (publisher) {
 				console.log("Removing subscriber ", publisher, " from ", id)
 				var sessionPublisher = getSession(publisher);
@@ -440,7 +440,7 @@ function hangupMedia(id) {
 		setSession(sessionSubcriber);
 		tasks.push({ id: subcriber, tr: null, msg: unpublishedEvent, jsep: null });
 		global.pokeScheduler();
-		
+
 
 	});
 	// Clear some flags

@@ -560,8 +560,32 @@ duktape_DATA += \
 	plugins/duktape/echotest.js \
 	plugins/duktape/janus-sdp.js
 EXTRA_DIST += conf/janus.plugin.duktape.jcfg.sample.in
+
 endif
 
+if ENABLE_PLUGIN_DUKTAPE_HTTP
+plugin_LTLIBRARIES += plugins/libjanus_duktape_http.la
+plugins_libjanus_duktape_http_la_SOURCES = plugins/duktape-deps/duk_http.c plugins/duktape-deps/duk_http.h \
+    plugins/duktape-deps/duktape.h plugins/duktape-deps/duktape.c \
+    plugins/janus_duktape.c plugins/janus_duktape.h \
+    plugins/duktape-deps/duk_module_duktape.c plugins/duktape-deps/duk_module_duktape.h \
+    plugins/duktape-deps/duk_console.c plugins/duktape-deps/duk_console.h
+plugins_libjanus_duktape_http_la_CFLAGS = $(plugins_cflags) $(DUKTAPE_CFLAGS)
+plugins_libjanus_duktape_http_la_LDFLAGS = $(plugins_ldflags) $(DUKTAPE_LDFLAGS) $(DUKTAPE_LIBS)
+plugins_libjanus_duktape_http_la_LIBADD = $(plugins_libadd) $(DUKTAPE_LIBADD)
+endif
+
+if ENABLE_PLUGIN_DUKTAPE_JWT
+plugin_LTLIBRARIES += plugins/libjanus_duktape_jwt.la
+plugins_libjanus_duktape_jwt_la_SOURCES = plugins/duktape-deps/duk_jwt.c plugins/duktape-deps/duk_jwt.h \
+    plugins/duktape-deps/duktape.h plugins/duktape-deps/duktape.c \
+    plugins/janus_duktape.c plugins/janus_duktape.h \
+    plugins/duktape-deps/duk_module_duktape.c plugins/duktape-deps/duk_module_duktape.h \
+    plugins/duktape-deps/duk_console.c plugins/duktape-deps/duk_console.h
+plugins_libjanus_duktape_jwt_la_CFLAGS = $(plugins_cflags) $(DUKTAPE_CFLAGS)
+plugins_libjanus_duktape_jwt_la_LDFLAGS = $(plugins_ldflags) $(DUKTAPE_LDFLAGS) $(DUKTAPE_LIBS) $(DUKTAPE_JWT_LIBS)
+plugins_libjanus_duktape_jwt_la_LIBADD = $(plugins_libadd) $(DUKTAPE_LIBADD)
+endif
 
 ##
 # Post-processing

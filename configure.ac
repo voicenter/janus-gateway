@@ -159,6 +159,10 @@ AC_ARG_ENABLE([all-plugins],
                      [enable_plugin_audiobridge=no])
                AS_IF([test "x$enable_plugin_duktape" != "xyes"],
                      [enable_plugin_duktape=no])
+			   AS_IF([test "x$enable_plugin_duktape_http" != "xyes"],
+                     [enable_plugin_duktape_http=no])
+			   AS_IF([test "x$enable_plugin_duktape_jwt" != "xyes"],
+                     [enable_plugin_duktape_jwt=no])
                AS_IF([test "x$enable_plugin_echotest" != "xyes"],
                      [enable_plugin_echotest=no])
                AS_IF([test "x$enable_plugin_lua" != "xyes"],
@@ -662,7 +666,6 @@ PKG_CHECK_MODULES([PLUGINS],
                   [
                     glib-2.0 >= $glib_version
                     jansson >= $jansson_version
-                    libjwt >= $jwt_version
                   ])
 
 AC_ARG_ENABLE([plugin-audiobridge],
@@ -678,6 +681,27 @@ AC_ARG_ENABLE([plugin-duktape],
               [AS_IF([test "x$enable_plugin_duktape" != "xyes"],
                      [enable_plugin_duktape=no])],
               [enable_plugin_duktape=no])
+
+AC_ARG_ENABLE([plugin-duktape-http],
+              [AS_HELP_STRING([--enable-plugin-duktape-http],
+                              [Enable duktape-http plugin])],
+              [AS_IF([test "x$enable_plugin_duktape" != "xyes" or "x$enable_plugin_duktape_http" != "xyes"],
+                     [enable_plugin_duktape_http=no])],
+              [enable_plugin_duktape_http=no])
+
+AC_ARG_ENABLE([plugin-duktape-jwt],
+              [AS_HELP_STRING([--enable-plugin-duktape-jwt],
+                              [Enable duktape-jwt plugin])],
+              [AS_IF([test "x$enable_plugin_duktape" != "xyes" or "x$enable_plugin_duktape_http" != "xyes" or "x$enable_plugin_duktape_jwt" != "xyes"],
+                     [enable_plugin_duktape_jwt=no])],
+              [enable_plugin_duktape_jwt=no])
+
+AS_IF([test "x$enable_plugin_duktape_jwt" = "xyes"],
+      [PKG_CHECK_MODULES([DUKTAPE_JWT],
+			 [
+			   libjwt >= $jwt_version
+			 ])
+      ])
 
 AC_ARG_ENABLE([plugin-echotest],
               [AS_HELP_STRING([--disable-plugin-echotest],
@@ -811,6 +835,8 @@ AC_SUBST([LUA_LIBS])
 
 AM_CONDITIONAL([ENABLE_PLUGIN_AUDIOBRIDGE], [test "x$enable_plugin_audiobridge" = "xyes"])
 AM_CONDITIONAL([ENABLE_PLUGIN_DUKTAPE], [test "x$enable_plugin_duktape" = "xyes"])
+AM_CONDITIONAL([ENABLE_PLUGIN_DUKTAPE_HTTP], [test "x$enable_plugin_duktape" = "xyes" && test "x$enable_plugin_duktape_http" = "xyes"])
+AM_CONDITIONAL([ENABLE_PLUGIN_DUKTAPE_JWT], [test "x$enable_plugin_duktape" = "xyes" && test "x$enable_plugin_duktape_http" = "xyes" && test "x$enable_plugin_duktape_jwt" = "xyes"])
 AM_CONDITIONAL([ENABLE_PLUGIN_ECHOTEST], [test "x$enable_plugin_echotest" = "xyes"])
 AM_CONDITIONAL([ENABLE_PLUGIN_LUA], [test "x$enable_plugin_lua" = "xyes"])
 AM_CONDITIONAL([ENABLE_PLUGIN_RECORDPLAY], [test "x$enable_plugin_recordplay" = "xyes"])
@@ -1036,6 +1062,12 @@ AM_COND_IF([ENABLE_PLUGIN_LUA],
 AM_COND_IF([ENABLE_PLUGIN_DUKTAPE],
 	[echo "    Duktape Interpreter:   yes"],
 	[echo "    Duktape Interpreter:   no"])
+AM_COND_IF([ENABLE_PLUGIN_DUKTAPE_HTTP],
+	[echo "    Duktape-http Plugin:   yes"],
+	[echo "    Duktape-http Plugin:   no"])
+AM_COND_IF([ENABLE_PLUGIN_DUKTAPE_JWT],
+	[echo "    Duktape-jwt Plugin:    yes"],
+	[echo "    Duktape-jwt Plugin:    no"])
 echo "Event handlers:"
 AM_COND_IF([ENABLE_SAMPLEEVH],
 	[echo "    Sample event handler:  yes"],
