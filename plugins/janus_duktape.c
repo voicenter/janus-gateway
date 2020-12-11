@@ -414,7 +414,7 @@ static void *janus_duktape_async_event_helper(void *data) {
 
 /* Helper method to stringify Duktape types */
 #define DUK_CASE_STR(type) case type: return #type
-static const char *janus_duktape_type_string(int type) {
+const char *janus_duktape_type_string(int type) {
 	switch(type) {
 		DUK_CASE_STR(DUK_TYPE_NONE);
 		DUK_CASE_STR(DUK_TYPE_UNDEFINED);

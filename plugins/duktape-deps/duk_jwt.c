@@ -1,30 +1,9 @@
-#include "debug.h"
-#include "duktape.h"
-#include "plugins/plugin.h"
 #include "duk_jwt.h"
 #include <stdio.h>
 #include <jwt.h>
 #include <string.h>
 #include <stdlib.h>
 
-#define DUK_CASE_STR(type) case type: return #type
-static const char *janus_duktape_type_string(int type) {
-	switch(type) {
-		DUK_CASE_STR(DUK_TYPE_NONE);
-		DUK_CASE_STR(DUK_TYPE_UNDEFINED);
-		DUK_CASE_STR(DUK_TYPE_NULL);
-		DUK_CASE_STR(DUK_TYPE_BOOLEAN);
-		DUK_CASE_STR(DUK_TYPE_NUMBER);
-		DUK_CASE_STR(DUK_TYPE_STRING);
-		DUK_CASE_STR(DUK_TYPE_OBJECT);
-		DUK_CASE_STR(DUK_TYPE_BUFFER);
-		DUK_CASE_STR(DUK_TYPE_POINTER);
-		DUK_CASE_STR(DUK_TYPE_LIGHTFUNC);
-		default:
-			break;
-	}
-	return NULL;
-}
 
 static duk_ret_t jwt_validate(duk_context *ctx) {
     char* data;

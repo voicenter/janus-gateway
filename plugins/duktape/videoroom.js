@@ -14,7 +14,6 @@ var name = "duktape-videoroomjs";
 
 // Let's add more info to errors
 Error.prototype.toString = function () {
-	console.log(this.name + ": " + this.message + " (at line " + this.lineNumber + ")")
 	// @ts-ignore
 	return this.name + ": " + this.message + " (at line " + this.lineNumber + ")";
 };
@@ -52,7 +51,6 @@ Duktape.modSearch = function (id) {
 var sdpUtils = require("./janus-sdp");
 
 // State and properties
-
 var state = require("./video-room-helpers/state")(global);
 var util = require("./video-room-helpers/util")(global);
 var janusManager = require("./video-room-helpers/janus-manager")(global, state);
@@ -62,7 +60,6 @@ var sessions = state.sessions;
 var tasks = state.tasks;
 var rooms = state.rooms;
 var managerSessions = state.managerSessions;
-
 
 var newRoom = state.newRoom;
 var deleteRoom = state.deleteRoom;
@@ -84,7 +81,6 @@ var handleJoinManager = janusManager.handleJoinManager;
 var handleManagerMessage = janusManager.handleManagerMessage;
 var handleSyncManager = janusManager.handleSyncManager;
 var syncSessionToManager = janusManager.syncSessionToManager;
-
 
 // Just for fun, let's override the plugin info with our own
 function getVersion() {

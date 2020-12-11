@@ -1,32 +1,9 @@
-#include "debug.h"
-#include "duktape.h"
-#include "plugins/plugin.h"
 #include "duk_http.h"
 #include <stdio.h>
 #include <curl/curl.h>
 #include <string.h>
 #include <stdlib.h>
 
-
-/* Helper method to stringify Duktape types */
-#define DUK_CASE_STR(type) case type: return #type
-static const char *janus_duktape_type_string(int type) {
-	switch(type) {
-		DUK_CASE_STR(DUK_TYPE_NONE);
-		DUK_CASE_STR(DUK_TYPE_UNDEFINED);
-		DUK_CASE_STR(DUK_TYPE_NULL);
-		DUK_CASE_STR(DUK_TYPE_BOOLEAN);
-		DUK_CASE_STR(DUK_TYPE_NUMBER);
-		DUK_CASE_STR(DUK_TYPE_STRING);
-		DUK_CASE_STR(DUK_TYPE_OBJECT);
-		DUK_CASE_STR(DUK_TYPE_BUFFER);
-		DUK_CASE_STR(DUK_TYPE_POINTER);
-		DUK_CASE_STR(DUK_TYPE_LIGHTFUNC);
-		default:
-			break;
-	}
-	return NULL;
-}
 
 struct url_data {
     size_t size;
