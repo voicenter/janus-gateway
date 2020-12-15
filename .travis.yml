@@ -71,7 +71,7 @@ before_script:
   - pushd rabbitmq-c && mkdir build && pushd build && cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF -DBUILD_TOOLS=OFF .. && sudo cmake --build . --target install -- -j$(nproc) && popd && popd
   - travis_retry git clone -b v1.3.1 https://github.com/eclipse/paho.mqtt.c.git paho.mqtt.c
   - pushd paho.mqtt.c && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_SAMPLES=FALSE -DPAHO_BUILD_DOCUMENTATION=FALSE && make -j$(nproc) && sudo make install && popd
-  - if [ $LIBJWT = YES ]; then git clone -b master https://github.com/benmcollins/libjwt.git libjwt; fi
+  - if [ $LIBJWT = YES ]; then git clone -b v1.9.0 https://github.com/benmcollins/libjwt.git libjwt; fi
   - if [ $LIBJWT = YES ]; then pushd libjwt && autoreconf -i && ./configure && make all && sudo make install; fi
 
 script:
